@@ -1,5 +1,4 @@
 #lang racket
-(require racket/dir)
 #|
 ##################################################################
 Programming Paradigms - CSI 2120
@@ -34,11 +33,58 @@ Assignment 2: SimilaritySearch
   )
 |#
 
+;################################################################################
+;FUNCTION TO LOOP THROUGH THE IMAGE DATASET TO COMPARE VALUES.
 
+
+; returns a list with all the values; we use this to create the list that has the values themselves.
+(define (loop-through-dataset lst query)
+  (if (null? lst)
+      '()
+      (let ((photo (convert-file-path (car lst))))
+        (if (ends-with-jpg photo)
+            (cons (division (compare-histogram (query) (convert-file-to-list (photo))) (sum-of-img (convert-file-to-list photo))) (loop-through-dataset (cdr lst) query))
+            (loop-through-dataset (cdr lst) query)
+            )
+        )
+      )
+  )
+
+;################################################################################
+;FUNCTION TO CHECK IF THE FILENAME ENDS WITH JPG.TXT
+(define (ends-with-jpg photo)
+  (if (string=? (substring photo (- (string-length photo)(- (string-length "jpg.txt") 1 ))) ".jpg.txt")
+        #t
+        #f
+      )
+  )
+
+(define (isSubString s1 s2)
+  (let ((str-len (string-length s2))
+        
+        (sub-len (string-length s1))
+        )
+    (let strLoop ((start-idx 0))
+      (let ((sub-idx(+ start-idx sub-len)))
+        (if (= start-idx (- str-len 1))
+            #f
+            (if ( string=? (substring s2 start-idx sub-idx) s1)
+                #t
+                (strLoop (+ start-idx 1))
+                )
+            )
+        )
+      )
+    )
+  )
 ;################################################################################
 ;function to convert a directory into a list;
 (define (convert-directory dirName)
   (directory-list dirName)
+  )
+
+(define (convert-file-path filepath)
+  (path->string filepath)
   )
 ;################################################################################
 ;function to sort the list; keep in mind we are going to use the
@@ -98,3 +144,5 @@ Assignment 2: SimilaritySearch
 
    (/ x y)
    )
+
+(loop-through-dataset (convert-directory "imageDataset2_15_20")(convert-file-to-list "savedQueryHistograms/colorHistogram_4.txt"))
