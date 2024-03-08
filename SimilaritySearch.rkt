@@ -43,12 +43,14 @@ Assignment 2: SimilaritySearch
       '()
       (let ((photo (convert-file-path (car lst))))
         (if (ends-with-jpg photo)
-            (cons (division (compare-histogram (query) (convert-file-to-list (photo))) (sum-of-img (convert-file-to-list photo))) (loop-through-dataset (cdr lst) query))
+            (cons (division (compare-histogram query (convert-file-to-list photo)) (sum-of-img (convert-file-to-list photo))) (loop-through-dataset (cdr lst) query))
             (loop-through-dataset (cdr lst) query)
             )
         )
       )
   )
+
+
 
 ;################################################################################
 ;FUNCTION TO CHECK IF THE FILENAME ENDS WITH JPG.TXT
@@ -142,7 +144,7 @@ Assignment 2: SimilaritySearch
  (let ((x (compare-histogram (convert-file-to-list "savedQueryHistograms/colorHistogram_4.txt") (convert-file-to-list "savedQueryHistograms/colorHistogram_14.txt")))
         (y (sum-of-img (convert-file-to-list "savedQueryHistograms/colorHistogram_14.txt"))))
 
-   (/ x y)
+   (division x y)
    )
 
 (loop-through-dataset (convert-directory "imageDataset2_15_20")(convert-file-to-list "savedQueryHistograms/colorHistogram_4.txt"))
